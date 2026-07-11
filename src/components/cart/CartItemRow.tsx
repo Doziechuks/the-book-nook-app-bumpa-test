@@ -15,9 +15,7 @@ interface CartItemRowProps {
 
 const CartItemRow = ({ item }: CartItemRowProps) => {
   const { theme } = useTheme();
-  const incrementQty = useCartStore((state) => state.incrementQty);
-  const decrementQty = useCartStore((state) => state.decrementQty);
-  const removeItem = useCartStore((state) => state.removeItem);
+  const { incrementQty, decrementQty, removeItem } = useCartStore();
 
   return (
     <View
