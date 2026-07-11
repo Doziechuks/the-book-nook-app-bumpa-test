@@ -13,9 +13,14 @@ assessment.
 - **Book Details** — fetches a single book with explicit loading / error / success states driven
   by `useEffect`, shows description, rating, stock, and reviews.
 - **Cart** — add/remove books, adjust quantities, live subtotal/tax/total, empty-cart state.
-- **Checkout** — order summary, payment method selection, mock card input, loading/success/failure
-  feedback, and order history recorded to the Profile tab.
-- **Profile** — mock user info, order history, settings list, logout confirmation.
+- **Checkout** — order summary, delivery method (store pickup / doorstep delivery), payment method
+  selection, mock card input, loading/success/failure feedback, and order recorded to order
+  history.
+- **Orders** — dedicated order history screen (linked from Profile), with status filter tabs
+  (all/pending/completed/canceled), per-order line items, and the ability to cancel a pending
+  order.
+- **Profile** — mock user info, an Orders row (with a live order-count badge) linking to the Orders
+  screen, settings list, logout confirmation.
 - **Add-to-cart animation** — tapping "add to cart" flies a clone of the book cover from its
   on-screen position to the cart tab icon using Reanimated shared values.
 - **Animated splash** — a custom JS splash screen (cart icon + "The Book Nook" text, fade/scale/
@@ -52,7 +57,9 @@ app/
     │   ├── index.tsx        # Search, filter, sort, paginated grid
     │   └── [id].tsx         # Book Details (lifecycle screen)
     ├── cart/index.tsx
-    └── profile/index.tsx
+    └── profile/
+        ├── index.tsx        # Profile home, incl. Orders row with order-count badge
+        └── orders.tsx       # Order history (status filter tabs, cancel pending order)
 
 src/
 ├── components/
@@ -60,7 +67,9 @@ src/
 │   │                         # LoadingSkeleton, AnimatedSplash
 │   ├── books/                # BookCard, BookCarousel, ReviewItem, CategoryPill
 │   ├── cart/                 # CartItemRow, CartSummary, EmptyCart, FlyToCartOverlay
-│   ├── checkout/              # OrderSummary, PaymentMethodSelector, PlaceOrderButton
+│   ├── checkout/              # OrderSummary, DeliveryMethodSelector, PaymentMethodSelector,
+│   │                         # PlaceOrderButton
+│   ├── orders/                # OrderListItem, OrderStatusTabs
 │   ├── Button.tsx, Popup.tsx, BottomSheetModal.tsx   # pre-existing shared UI
 ├── hooks/                    # useBooks, useBookDetails, useCheckout
 ├── services/                 # mockBooks, booksApi, checkoutApi
@@ -101,7 +110,8 @@ yarn test:watch  # watch mode
 
 Covers: price display, cart add/remove/quantity, the book-details fetch lifecycle
 (loading/error/success), the mock books API (pagination/search/filter/sort), and the checkout
-flow (success clears the cart and records an order; failure leaves the cart untouched).
+flow (success clears the cart and records an order in the Orders screen; failure leaves the cart
+untouched).
 
 ## Other scripts
 
