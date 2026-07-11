@@ -1,19 +1,15 @@
 {
   "expo": {
-    "name": "bumpa-test",
-    "slug": "bumpa-test",
+    "name": "The Book Nook App",
+    "slug": "the-book-nook-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "bumpatest",
+    "scheme": "thebooknookapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.doziechuks.thebooknookapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +18,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.doziechuks.thebooknookapp"
     },
     "web": {
       "bundler": "metro",
@@ -30,7 +27,16 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-image",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#019444"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

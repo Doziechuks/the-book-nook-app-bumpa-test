@@ -1,11 +1,14 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import FlyToCartOverlay from '@/src/components/cart/FlyToCartOverlay';
+import AnimatedSplash from '@/src/components/common/AnimatedSplash';
+import ThemeProvider, { useTheme } from '@/src/theme/ThemeProvider';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/components/useColorScheme';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -13,7 +16,7 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
+  // Ensure that reloading on `/checkout` keeps a back button present.
   initialRouteName: '(tabs)',
 };
 
@@ -22,8 +25,15 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    OutfitBold: require('../assets/fonts/Outfit-Bold.ttf'),
+    OutfitLight: require('../assets/fonts/Outfit-Light.ttf'),
+    OutfitRegular: require('../assets/fonts/Outfit-Regular.ttf'),
+    OutfitThin: require('../assets/fonts/Outfit-Thin.ttf'),
+    OutfitSemiBold: require('../assets/fonts/Outfit-SemiBold.ttf'),
+    OutfitMedium: require('../assets/fonts/Outfit-Medium.ttf'),
   });
+
+  const [showAnimatedSplash, setShowAnimatedSplash] = useState(true);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -32,6 +42,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
+      // Hide the native splash immediately; the custom AnimatedSplash
+      // overlay below takes over for the actual branded animation.
       SplashScreen.hideAsync();
     }
   }, [loaded]);
@@ -40,18 +52,27 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <RootLayoutNav />
+          <FlyToCartOverlay />
+          {showAnimatedSplash && <AnimatedSplash onFinish={() => setShowAnimatedSplash(false)} />}
+          <Toast />
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const { theme } = useTheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <Stack screenOptions={{ contentStyle: { backgroundColor: theme.background } }}>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="checkout" options={{ presentation: 'modal', headerShown: false }} />
+    </Stack>
   );
 }
